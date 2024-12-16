@@ -30,4 +30,5 @@ export default connectDb
  * try and catch mein wrap karna hai
  * async await lagana hai
  * .env file hamesa root mein rahega 
+ * refresh token used to store in database (session  and cookie)
  */
