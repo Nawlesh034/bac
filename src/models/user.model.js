@@ -27,7 +27,6 @@ const userSchema =new Schema({
     },
     avatar:{
         type:String, // cloudnary url
-        require:true
     },
     coverImage:{
         type:String    // cloudnary url
@@ -57,7 +56,7 @@ const userSchema =new Schema({
 userSchema.pre("save",async function(next) {
     if(!this.isModified("password")) next()
 
-    this.password=bcrypt.hash(this.password,10)
+    this.password=await bcrypt.hash(this.password,10)
     next()
 })
 
