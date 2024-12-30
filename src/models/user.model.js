@@ -1,7 +1,8 @@
 import mongoose ,{Schema} from "mongoose";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-
+import dotenv from "dotenv";
+dotenv.config();
 
 const userSchema =new Schema({
     username:{
@@ -54,7 +55,7 @@ const userSchema =new Schema({
 })
 
 userSchema.pre("save",async function(next) {
-    if(!this.isModified("password")) next()
+    if(!this.isModified("password")) next()   // agr modified ni hua hai password toh next pe chle jao
 
     this.password=await bcrypt.hash(this.password,10)
     next()
@@ -67,27 +68,28 @@ userSchema.methods.isPasswordCorrect = async function(password) {
 }
 
 userSchema.methods.generateAccessToken = function(){
-    jwt.sign({
+   return jwt.sign({
         _id:this._id,
         email:this.email,
         username:this.username,
         fullname:this.fullname
-    })
-    process.env.ACCESS_TOKEN_SECRET,
+    }, process.env.ACCESS_TOKEN_SECRET,
     {
         expiresIn:process.env.ACCESS_TOKEN_EXPIRY
-    }
-}
+    })
+   
+}  // it is for short term
 userSchema.methods.generteRefreshToken=function(){
-    jwt.sign({
+   return jwt.sign({
         _id:this._id,
        
-    })
-    process.env.REFRESH_TOKEN_SECRET,
+    },process.env.REFRESH_TOKEN_SECRET,
+    
     {
         expiresIn:process.env.REFRESH_TOKEN_EXPIRY
-    }
-}
+    })
+    
+} // it is for long term
 
 
 
